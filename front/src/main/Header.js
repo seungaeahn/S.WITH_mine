@@ -1,5 +1,5 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../css/Header.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -20,11 +20,13 @@ export default function Header() {
               <li className="nav-item">
                 <div className="write">
                   <div className="write_1">
-                    <img
-                      className="write_img"
-                      src={process.env.PUBLIC_URL + "../img/writing.png"}
-                      alt="newwriting"
-                    />
+                    <a className="nav-link" href="/new">
+                      <img
+                        className="write_img"
+                        src={process.env.PUBLIC_URL + "../img/writing.png"}
+                        alt="newwriting"
+                      />
+                    </a>
                   </div>
                 </div>
               </li>
