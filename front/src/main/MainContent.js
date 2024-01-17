@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/MainPageCss.css";
 import KakaoMap from "./KakaoMap";
 import "../css/KakaoMap.css";
@@ -7,70 +7,43 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import HeartButton from "./HeartButton";
 import SearchIcon from "./img/search.png";
 import DeleteIcon from "./img/delete.png";
+import axios from "axios";
+// import RetrieveAllPostsForPostNoApi from "../Api/MainPageApi";
+
 function MainContent() {
-  const boardsData = [
-    {
-      id: 1,
-      category: "스터디",
-      deadline: "2024.03.01",
-      title: "같이 성장하실 백엔드 개발자 모집합니다.",
-      skill: "React, Node.js",
-      profileImg:
-        "https://i.pinimg.com/originals/1d/31/ed/1d31ed10d5c74bcf4f7af6471732ba2f.jpg",
-      username: "작성자아이디",
-      commentCount: 11,
-    },
-    {
-      id: 2,
-      category: "프로젝트",
-      deadline: "2024.03.15",
-      title: "프론트엔드 개발자 찾습니다.",
-      skill: "JavaScript, Vue.js",
-      profileImg: "https://example.com/profile2.jpg",
-      username: "anotherUsername",
-      commentCount: 7,
-    },
-    {
-      id: 3,
-      category: "프로젝트",
-      deadline: "2024.03.15",
-      title: "프론트엔드 개발자 찾습니다.",
-      skill: "JavaScript, Vue.js",
-      profileImg: "https://example.com/profile2.jpg",
-      username: "anotherUsername",
-      commentCount: 7,
-    },
-    {
-      id: 4,
-      category: "프로젝트",
-      deadline: "2024.03.15",
-      title: "프론트엔드 개발자 찾습니다.",
-      skill: "JavaScript, Vue.js",
-      profileImg: "https://example.com/profile2.jpg",
-      username: "anotherUsername",
-      commentCount: 7,
-    },
-    {
-      id: 5,
-      category: "프로젝트",
-      deadline: "2024.03.15",
-      title: "프론트엔드 개발자 찾습니다.",
-      skill: "JavaScript, Vue.js",
-      profileImg: "https://example.com/profile2.jpg",
-      username: "anotherUsername",
-      commentCount: 7,
-    },
-    {
-      id: 6,
-      category: "프로젝트",
-      deadline: "2024.03.15",
-      title: "프론트엔드 개발자 찾습니다.",
-      skill: "JavaScript, Vue.js",
-      profileImg: "https://example.com/profile2.jpg",
-      username: "anotherUsername",
-      commentCount: 7,
-    },
-  ];
+  const [boards, setBoards] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/boards", { withCredentials: true })
+      .then((response) => {
+        const boardsData = response.data.map((board) => ({
+          id: board.post_no,
+          deadline: board.recruit_deadline,
+          category: board.recruit_type,
+          title: board.study_title,
+        }));
+        setBoards(boardsData);
+        console.log("데이터 있음", boardsData); // 받아온 데이터를 콘솔에 출력
+      })
+      .catch((error) => {
+        console.log("데이터 없음", error);
+      });
+  }, []);
+
+  // const boardsData = [
+  //   {
+  //     id: 1,
+  //     category: "스터디",
+  //     deadline: "2024.03.01",
+  //     title: "같이 성장하실 백엔드 개발자 모집합니다.",
+  //     skill: "React, Node.js",
+  //     profileImg:
+  //       "https://i.pinimg.com/originals/1d/31/ed/1d31ed10d5c74bcf4f7af6471732ba2f.jpg",
+  //     username: "작성자아이디",
+  //     commentCount: 11,
+  //   },
+  // ];
 
   const [isSkillVisible, setSkillVisible] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState([]);
@@ -107,12 +80,12 @@ function MainContent() {
   const methods = ["온라인", "오프라인", "온/오프 병행"];
 
   const cities = [
-    " 강남/역삼/삼성",
+    "강남/역삼/삼성",
     "신사/청담/압구정",
     "서초/교대/사당",
-    " 잠실/송파/강동",
-    " 을지로/명동/중구/동대문",
-    " 서울역/이태원/용산",
+    "잠실/송파/강동",
+    "을지로/명동/중구/동대문",
+    "서울역/이태원/용산",
     "종로/인사동",
     "홍대/합정/마포/서대문",
     "여의도",
@@ -604,8 +577,8 @@ function MainContent() {
         </div>
 
         <ul className="board_box_section">
-          {boardsData.map((board) => (
-            <a key={board.id} className="board_box" href="/" /* Add link URL */>
+          {boards.map((board) => (
+            <a key={board.id} className="board_box" href="/">
               <li>
                 <div className="study_sort_badge">
                   <div className="study_sort_badge_content">
